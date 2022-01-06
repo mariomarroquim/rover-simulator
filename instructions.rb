@@ -9,6 +9,10 @@ class Instructions
     content.first.collect(&:to_i)
   end
 
+  def directions
+    content[1..-1].each_slice(2).to_a
+  end
+
   def content
     return instructions unless instructions.nil?
 
@@ -17,10 +21,10 @@ class Instructions
     instructions = []
 
     File.readlines(path).each do |line|
-      line = line.strip.gsub('  ', ' ').upcase rescue nil
+      line = line.strip.delete(' ').upcase rescue nil
       next if line.nil? || line.empty?
 
-      instructions << line.split(' ')
+      instructions << line.split('')
     end
 
     self.instructions = instructions

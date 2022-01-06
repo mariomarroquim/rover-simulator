@@ -15,4 +15,8 @@ class TestSendInstructions < Minitest::Test
   def test_instructions_initial_position
     assert_equal Instructions.new('instructions.txt').initial_position, [ 5, 5 ]
   end
+
+  def test_instructions_directions
+    assert_equal Instructions.new('instructions.txt').directions, [[['1', '2', 'N'], ['L', 'M', 'L', 'M', 'L', 'M', 'L', 'M', 'M']], [['3', '3', 'E'], ['M', 'M', 'R', 'M', 'M', 'R', 'M', 'R', 'R', 'M']]]
+  end
 end
