@@ -5,7 +5,7 @@ class Instructions
     self.path = path
   end
 
-  def initial_position
+  def plateau_upper_right_position
     content.first.collect(&:to_i)
   end
 

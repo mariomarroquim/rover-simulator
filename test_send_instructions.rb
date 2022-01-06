@@ -12,8 +12,8 @@ class TestSendInstructions < Minitest::Test
     assert !Instructions.new('empty_file.txt').valid?
   end
 
-  def test_instructions_initial_position
-    assert_equal Instructions.new('instructions.txt').initial_position, [ 5, 5 ]
+  def test_instructions_plateau_upper_right_position
+    assert_equal Instructions.new('instructions.txt').plateau_upper_right_position, [ 5, 5 ]
   end
 
   def test_instructions_directions
