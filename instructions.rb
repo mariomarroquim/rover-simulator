@@ -5,6 +5,10 @@ class Instructions
     self.path = path
   end
 
+  def initial_position
+    content.first.collect(&:to_i)
+  end
+
   def content
     return instructions unless instructions.nil?
 
