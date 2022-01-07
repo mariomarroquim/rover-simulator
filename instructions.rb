@@ -9,13 +9,15 @@ class Instructions
   end
 
   def terrain_top_right_position
-    !content.empty? ? content[0] : []
+    !content.nil? && !content.empty? ? content[0] : []
   end
 
   def rovers_current_position_and_commands
-    !content.empty? ? content[1..].each_slice(2).to_a : []
+    !content.nil? && !content.empty? ? content[1..].each_slice(2).to_a : []
   end
 
+  # Bad smell here: method too long with a lot of magic strings
+  # Applying the suggestion in line 67, this method would become more expressive
   def calculate_rovers_new_positions
     rovers_current_position_and_commands.collect do |information|
       current_position, commands = information
@@ -24,18 +26,17 @@ class Instructions
         current_orientation = current_position[2]
 
         if command != 'M'
-          new_orientation ||= 'E' if current_orientation == 'N' && command == 'R'
-          new_orientation ||= 'S' if current_orientation == 'E' && command == 'R'
-          new_orientation ||= 'W' if current_orientation == 'S' && command == 'R'
-          new_orientation ||= 'N' if current_orientation == 'W' && command == 'R'
+          current_position[2] = 'E' if current_orientation == 'N' && command == 'R'
+          current_position[2] = 'S' if current_orientation == 'E' && command == 'R'
+          current_position[2] = 'W' if current_orientation == 'S' && command == 'R'
+          current_position[2] = 'N' if current_orientation == 'W' && command == 'R'
 
-          new_orientation ||= 'W' if current_orientation == 'N' && command == 'L'
-          new_orientation ||= 'S' if current_orientation == 'W' && command == 'L'
-          new_orientation ||= 'E' if current_orientation == 'S' && command == 'L'
-          new_orientation ||= 'N' if current_orientation == 'E' && command == 'L'
-
-          current_position[2] = new_orientation
+          current_position[2] = 'W' if current_orientation == 'N' && command == 'L'
+          current_position[2] = 'S' if current_orientation == 'W' && command == 'L'
+          current_position[2] = 'E' if current_orientation == 'S' && command == 'L'
+          current_position[2] = 'N' if current_orientation == 'E' && command == 'L'
         else
+          # Bad smell here: see line 67
           current_position[1] = current_position[1].to_i + 1 if current_orientation == 'N'
           current_position[1] = current_position[1].to_i - 1 if current_orientation == 'S'
           current_position[0] = current_position[0].to_i + 1 if current_orientation == 'E'
@@ -63,20 +64,18 @@ class Instructions
 
   private
 
+  # TODO: Use a class to represent a instruction, cast the (x,y) coordinates
+  # inside it and remove calls to String#to_i from this class
   def content
     return @content unless @content.nil?
 
+    return unless File.exist?(path)
+
     lines = []
 
-    return lines unless File.exist?(path) && !File.empty?(path)
-
     File.readlines(path).each do |line|
-      line = line.strip.delete(' ').upcase unless line.nil? || line.empty?
-
-      # Checks if the line still has a content after cleaning
-      next if line.nil? || line.empty?
-
-      lines << line.split('')
+      line = line.strip.delete(' ').upcase
+      lines << line.split('') unless line.empty?
     end
 
     @content = lines
