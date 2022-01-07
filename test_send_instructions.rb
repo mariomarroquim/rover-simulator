@@ -20,6 +20,12 @@ class TestSendInstructions < Minitest::Test
     assert_equal Instructions.new('instructions.txt').directions, [[['1', '2', 'N'], ['L', 'M', 'L', 'M', 'L', 'M', 'L', 'M', 'M']], [['3', '3', 'E'], ['M', 'M', 'R', 'M', 'M', 'R', 'M', 'R', 'R', 'M']]]
   end
 
+  def test_instructions_position_valid
+    assert Instructions.new('instructions.txt').position_valid?(['1', '2', 'N'])
+    assert !Instructions.new('instructions.txt').position_valid?(['10', '2', 'N'])
+    assert !Instructions.new('instructions.txt').position_valid?(['10', '20', 'N'])
+  end
+
   def test_instructions_move_rovers
     pp Instructions.new('instructions.txt').plateau_upper_right_position
     pp Instructions.new('instructions.txt').move_rovers
