@@ -1,3 +1,6 @@
+# frozen_string_literal: true
+
+# Represents the input file with the instructions to the rovers
 class Instructions
   attr_accessor :path
 
@@ -10,7 +13,7 @@ class Instructions
   end
 
   def rovers_current_position_and_commands
-    !content.empty? ? content[1..-1].each_slice(2).to_a : []
+    !content.empty? ? content[1..].each_slice(2).to_a : []
   end
 
   def calculate_rovers_new_positions
@@ -53,9 +56,9 @@ class Instructions
     (x_coordinate_valid && y_coordinate_valid)
   end
 
-  # TODO Persist somewhere if requested (maybe in the input file?)
+  # TODO: Persist somewhere if requested (maybe in the input file?)
   def move_rovers_to_new_positions!
-    calculate_rovers_new_positions.reject{ |position| position_valid?(position) }.empty?
+    calculate_rovers_new_positions.reject { |position| position_valid?(position) }.empty?
   end
 
   private
@@ -68,7 +71,9 @@ class Instructions
     return lines unless File.exist?(path) && !File.empty?(path)
 
     File.readlines(path).each do |line|
-      line = line.strip.delete(' ').upcase rescue nil
+      line = line.strip.delete(' ').upcase unless line.nil? || line.empty?
+
+      # Checks if the line still has a content after cleaning
       next if line.nil? || line.empty?
 
       lines << line.split('')
