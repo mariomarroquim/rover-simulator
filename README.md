@@ -1,4 +1,4 @@
-# Foxbit Rover Simulator
+# Rover Simulator
 
 This is an example of a Ruby script to play with rovers on Mars.
 
